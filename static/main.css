@@ -1,0 +1,8 @@
+#cyViewport {
+  width: 100%;
+  height: 500px;
+  background-color: lightgray;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
