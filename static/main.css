@@ -1,8 +1,16 @@
+body {
+	margin: 0px;
+}
+
 #cyViewport {
   width: 100%;
   height: 500px;
-  background-color: lightgray;
+  background-color: #222;
   display: block;
   margin-left: auto;
   margin-right: auto;
+}
+
+.template{
+	display: none;
 }
