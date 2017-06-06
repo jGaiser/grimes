@@ -11,6 +11,12 @@ body {
   margin-right: auto;
 }
 
-.template{
+#partialTemplates{
 	display: none;
+}
+
+.colorController{
+	display: block;
+	padding: 15px;
+	float: left;
 }

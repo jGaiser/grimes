@@ -1,20 +1,25 @@
 function CytoscapeObject(){
 
-  var edgeTypes = [];
+  var edgeTypes = {};
+
+  function getEdges(){
+    return edgeTypes;
+  }
 
   function randomColor(){
 
+    var letters = ['7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'],
+        returnString = '#';
+
     function randomValue(){
-      return Math.floor(Math.random()*155 + 100);
+      return letters[Math.floor(Math.random()*letters.length)]
     }
 
-    var returnString = "rgb("
-
-    for (var i = 0; i < 3; i++) { 
-      returnString += randomValue() + ",";
+    for (var i = 0; i < 6; i++) { 
+      returnString += randomValue();
     }
 
-    return returnString.slice(0, -1) + ")";
+    return returnString;
   } 
 
   // Initialize cytoscape.js object 
@@ -55,8 +60,8 @@ function CytoscapeObject(){
       if(Object.keys(elem)[0] == 'edges'){
         elem.edges.forEach(function(edge){
 
-          if(edgeTypes.indexOf(edge.i) == -1){
-            edgeTypes.push(edge.i);
+          if(!edgeTypes[edge.i]){
+            edgeTypes[edge.i] = "";
           }
 
           cy.add({
@@ -74,12 +79,20 @@ function CytoscapeObject(){
   }
 
   function styleGraph(){
+    var someColor;
 
-    edgeTypes.forEach(function(type){
-      cy.style().selector('edge[type="'+ type +'"]').style({'line-color': randomColor()});
-    })
+    for(var type in edgeTypes){
+      someColor = randomColor();
+      edgeTypes[type] = someColor;
+      updateEdgeColor(type, someColor, false);
+    }
 
     cy.style().update();
+  }
+
+  function updateEdgeColor(type, color, update){
+    cy.style().selector('edge[type="'+ type +'"]').style({'line-color': color});
+    if(update) cy.style().update();
   }
 
   function init(){
@@ -87,25 +100,69 @@ function CytoscapeObject(){
     fetch_edges();
 
     cy.layout({ 
-      name: 'cose'
+      name: 'concentric'
     }).run();
 
     styleGraph();
   }
 
   init();
+
+  return {
+    getEdges: getEdges,
+    updateEdgeColor: updateEdgeColor
+  }
 };
+
+
+function CytoscapeGUI(){
+  var $colorController = $("#partialTemplates .colorController").first(),
+      $colorPanel      = $("#edgeColorControlPanel"),
+      edgeCollection   = cy.getEdges();
+
+  function generateEdgeColorController(edgeType, color){
+    var $controller = $colorController.clone();
+        $controllerInput = $controller.find('.jscolor');
+    $controller.find('.edgeType').html(edgeType);
+    $controllerInput.css('backgroundColor', color);
+    $controllerInput.val(color);
+    $controllerInput.data('type', edgeType);
+
+    return $controller;
+  }
+
+  function populateEdgeColorControl(){
+    for (var edge in edgeCollection) {
+      $colorPanel.append( generateEdgeColorController(edge, edgeCollection[edge]) );
+    }
+
+    jscolor.installByClassName('jscolor');
+    $('.jscolor').change(updateEdgeColor);
+  }
+
+  function updateEdgeColor(){
+    var $this = $(this);
+    cy.updateEdgeColor($this.data('type'), '#' + $this.val(), true);
+  }
+  
+  function init(){
+    populateEdgeColorControl();
+  } 
+
+  init();
+}
 
 function formatViewport(){
   // Sets cytoscape viewport element to appropriate height
 
   var viewport = document.getElementById('cyViewport'),
-      windowHeight = window.innerHeight;
+      windowHeight = window.innerHeight; 
 
-  viewport.style.height = windowHeight - 250 + 'px';
+  viewport.style.height = windowHeight - 200 + 'px';
 }  
 
 window.onload = function(){ 
   formatViewport();
-  var cy = new CytoscapeObject();
+  window.cy = new CytoscapeObject();
+  window.cyGUI = new CytoscapeGUI();
 }

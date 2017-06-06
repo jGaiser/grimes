@@ -6,16 +6,23 @@ import json
 app = Flask(__name__);
 
 @app.route('/')
-@app.route('/<network_id>')
-@app.route('/<network_id>/')
-def home(network_id=None):
+@app.route('/<method>/<source_id>')
+@app.route('/<method>/<source_id>/')
+def home(method, source_id):
     """
         Gather important data to send to client side with home template
+        'method' argument may by either 'local' or 'network'.
+        If 'method' argument is 'local', 'id' is name of document
+        If 'method' argument is 'network', 'id' is id of public NEDx repository
     """
+    if method == "local":
+        cx_data = json.dumps(get_local_cx("Criz Network Proteins.cx"))
 
-    cx_data = json.dumps(get_local_cx("Criz Network Proteins.cx"))
+    if method == "network":
+        cx_data = json.dumps(get_network_cx(source_id))
+
     return render_template('home.html', cx_data = cx_data)
-
+        
 
 def get_local_cx(filename):
     """
