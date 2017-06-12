@@ -24,16 +24,10 @@ function CytoscapeObject(){
 
   // Initialize cytoscape.js object 
   var cy = cytoscape({
-    container: document.getElementById('cyViewport'), 
-    style: [
-      {
-        selector: 'node',
-        style: {
-          label: 'data(label)'  
-        }  
-      }
-    ]
+    container: document.getElementById('cyViewport')
   });
+
+  cy.json(cx_data);
 
   function fetch_nodes(){
 
@@ -100,7 +94,7 @@ function CytoscapeObject(){
     fetch_edges();
 
     cy.layout({ 
-      name: 'concentric'
+      name: 'cose'
     }).run();
 
     styleGraph();
@@ -123,6 +117,7 @@ function CytoscapeGUI(){
   function generateEdgeColorController(edgeType, color){
     var $controller = $colorController.clone();
         $controllerInput = $controller.find('.jscolor');
+        
     $controller.find('.edgeType').html(edgeType);
     $controllerInput.css('backgroundColor', color);
     $controllerInput.val(color);
