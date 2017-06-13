@@ -20,8 +20,9 @@ def home(method, source_id):
 
     if method == "network":
         cx_data = json.dumps(get_network_cx(network_id, view_id))
+        cx_style = json.dumps(get_network_style()) # Style
 
-    return render_template('home.html', cx_data = cx_data)
+    return render_template('home.html', cx_data = cx_data, cx_style = cx_style)
         
 
 def get_local_cx(filename):
@@ -70,3 +71,21 @@ def get_network_cx(network_id, view_id):
     request = urllib2.urlopen(endpoint)
     return request.read().decode('utf8')   
 
+
+#########################
+# get_network_style - Will
+# Grabs the style of the network.
+# Style grabbed is the 'default' style. That style
+# is modified by R.
+# Based off of get_network_cx
+def get_network_style():
+    """
+        Get CX data from public NDEx server
+        Accepts network id and view id
+        Returns string of network JSON data
+        TODO: Provide interface for different methods, i.e. 'metadata' instead of 'network'
+        """
+    endpoint = "http://localhost:1234/v1/styles/default.json/"
+    
+    request = urllib2.urlopen(endpoint)
+    return request.read().decode('utf8')

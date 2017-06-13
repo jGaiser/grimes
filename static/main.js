@@ -2,225 +2,7 @@ function CytoscapeObject(){
 
   var edgeTypes = {};
 
-  var cx_style = [ {
-    "selector" : "node",
-    "css" : {
-      "shape" : "ellipse",
-      "background-opacity" : 1.0,
-      "color" : "rgb(0,0,0)",
-      "border-width" : 1.8,
-      "background-color" : "rgb(240,255,255)",
-      "height" : 100.0,
-      "text-opacity" : 1.0,
-      "width" : 100.0,
-      "border-opacity" : 1.0,
-      "font-family" : "SansSerif",
-      "font-weight" : "normal",
-      "border-color" : "rgb(136,136,136)",
-      "font-size" : 22,
-      "text-valign" : "center",
-      "text-halign" : "center",
-      "content" : "data(name)"
-    }
-  }, {
-    "selector" : "node[Median > 100]",
-    "css" : {
-      "background-color" : "rgb(255,204,0)"
-    }
-  }, {
-    "selector" : "node[Median = 100]",
-    "css" : {
-      "background-color" : "rgb(255,215,0)"
-    }
-  }, {
-    "selector" : "node[Median > 10][Median < 100]",
-    "css" : {
-      "background-color" : "mapData(Median,10,100,rgb(255,230,0),rgb(255,215,0))"
-    }
-  }, {
-    "selector" : "node[Median > 5][Median < 10]",
-    "css" : {
-      "background-color" : "mapData(Median,5,10,rgb(255,255,0),rgb(255,230,0))"
-    }
-  }, {
-    "selector" : "node[Median > 2.25][Median < 5]",
-    "css" : {
-      "background-color" : "mapData(Median,2.25,5,rgb(255,255,126),rgb(255,255,0))"
-    }
-  }, {
-    "selector" : "node[Median > 0][Median < 2.25]",
-    "css" : {
-      "background-color" : "mapData(Median,0,2.25,rgb(0,238,0),rgb(255,255,126))"
-    }
-  }, {
-    "selector" : "node[Median > -2.25][Median < 0]",
-    "css" : {
-      "background-color" : "mapData(Median,-2.25,0,rgb(0,255,255),rgb(0,238,0))"
-    }
-  }, {
-    "selector" : "node[Median > -5][Median < -2.25]",
-    "css" : {
-      "background-color" : "mapData(Median,-5,-2.25,rgb(0,204,255),rgb(0,255,255))"
-    }
-  }, {
-    "selector" : "node[Median > -10][Median < -5]",
-    "css" : {
-      "background-color" : "mapData(Median,-10,-5,rgb(0,191,255),rgb(0,204,255))"
-    }
-  }, {
-    "selector" : "node[Median > -100][Median < -10]",
-    "css" : {
-      "background-color" : "mapData(Median,-100,-10,rgb(0,127,255),rgb(0,191,255))"
-    }
-  }, {
-    "selector" : "node[Median = -100]",
-    "css" : {
-      "background-color" : "rgb(0,127,255)"
-    }
-  }, {
-    "selector" : "node[Median < -100]",
-    "css" : {
-      "background-color" : "rgb(0,153,255)"
-    }
-  }, {
-    "selector" : "node[nodeType = 'transcription factor']",
-    "css" : {
-      "shape" : "parallelogram"
-    }
-  }, {
-    "selector" : "node[nodeType = 'kinase']",
-    "css" : {
-      "shape" : "octagon"
-    }
-  }, {
-    "selector" : "node[nodeType = 'SH2 protein']",
-    "css" : {
-      "shape" : "v"
-    }
-  }, {
-    "selector" : "node[nodeType = 'tyrosine kinase']",
-    "css" : {
-      "shape" : "hexagon"
-    }
-  }, {
-    "selector" : "node[nodeType = 'RNA binding protein']",
-    "css" : {
-      "shape" : "rectangle"
-    }
-  }, {
-    "selector" : "node[nodeType = 'SRC-family kinase']",
-    "css" : {
-      "shape" : "diamond"
-    }
-  }, {
-    "selector" : "node[nodeType = 'receptor tyrosine kinase']",
-    "css" : {
-      "shape" : "roundrectangle"
-    }
-  }, {
-    "selector" : "node[nodeType = 'phosphatase']",
-    "css" : {
-      "shape" : "octagon"
-    }
-  }, {
-    "selector" : "node[nodeType = 'SH3 protein']",
-    "css" : {
-      "shape" : "triangle"
-    }
-  }, {
-    "selector" : "node[nodeType = 'SH2-SH3 protein']",
-    "css" : {
-      "shape" : "v"
-    }
-  }, {
-    "selector" : "node[nodeType = 'unknown']",
-    "css" : {
-      "shape" : "ellipse"
-    }
-  }, {
-    "selector" : "node[nodeType = 'G protein-coupled receptor']",
-    "css" : {
-      "border-width" : 16.0
-    }
-  }, {
-    "selector" : "node[nodeType = 'kinase']",
-    "css" : {
-      "border-width" : 12.0
-    }
-  }, {
-    "selector" : "node[nodeType = 'methyltransferase']",
-    "css" : {
-      "border-width" : 12.0
-    }
-  }, {
-    "selector" : "node[nodeType = 'tyrosine kinase']",
-    "css" : {
-      "border-width" : 12.0
-    }
-  }, {
-    "selector" : "node[nodeType = 'membrane protein']",
-    "css" : {
-      "border-width" : 8.0
-    }
-  }, {
-    "selector" : "node[nodeType = 'SRC-family kinase']",
-    "css" : {
-      "border-width" : 12.0
-    }
-  }, {
-    "selector" : "node[nodeType = 'receptor tyrosine kinase']",
-    "css" : {
-      "border-width" : 16.0
-    }
-  }, {
-    "selector" : "node[nodeType = 'phosphatase']",
-    "css" : {
-      "border-width" : 14.0
-    }
-  }, {
-    "selector" : "node[nodeType = 'deacetylase']",
-    "css" : {
-      "border-width" : 4.0
-    }
-  }, {
-    "selector" : "node[nodeType = 'demethylase']",
-    "css" : {
-      "border-width" : 4.0
-    }
-  }, {
-    "selector" : "node[nodeType = 'acetyltransferase']",
-    "css" : {
-      "border-width" : 12.0
-    }
-  }, {
-    "selector" : "node:selected",
-    "css" : {
-      "background-color" : "rgb(204,0,255)"
-    }
-  }, {
-    "selector" : "edge",
-    "css" : {
-      "font-size" : 10,
-      "target-arrow-shape" : "none",
-      "target-arrow-color" : "rgb(0,0,0)",
-      "opacity" : 1.0,
-      "line-color" : "rgb(205,155,155)",
-      "content" : "",
-      "line-style" : "solid",
-      "text-opacity" : 1.0,
-      "color" : "rgb(0,0,0)",
-      "width" : 3.0,
-      "font-family" : "Dialog",
-      "font-weight" : "normal",
-      "source-arrow-color" : "rgb(0,0,0)",
-      "source-arrow-shape" : "none"
-    }
-  }, {
-    "selector" : "edge:selected",
-    "css" : {
-      "line-color" : "rgb(255,0,0)"
-    }
-  } ];
+  
 
   function getEdges(){
     return edgeTypes;
@@ -241,6 +23,10 @@ function CytoscapeObject(){
 
     return returnString;
   } 
+
+
+// Grab the actual 'style' object from JSON
+cx_style = cx_style[0].style;
 
   // Initialize cytoscape.js object 
   var cy = cytoscape({
@@ -317,9 +103,9 @@ function CytoscapeObject(){
 
     cy.style().update();
 
-    cy.layout({ 
-      name: 'cose'
-    }).run();
+    //cy.layout({ 
+      //name: 'cose'
+    //}).run();
 
     // styleGraph();
   }
