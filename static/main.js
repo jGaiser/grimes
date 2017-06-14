@@ -1,12 +1,7 @@
-function CytoscapeObject(){
+function CytoscapeObject(elementID){
 
-  var edgeTypes = {};
-
-  
-
-  function getEdges(){
-    return edgeTypes;
-  }
+  // Grab the actual 'style' object from JSON
+  var cy;
 
   function randomColor(){
 
@@ -22,71 +17,6 @@ function CytoscapeObject(){
     }
 
     return returnString;
-  } 
-
-
-// Grab the actual 'style' object from JSON
-cx_style = cx_style[0].style;
-
-  // Initialize cytoscape.js object 
-  var cy = cytoscape({
-    container: document.getElementById('cyViewport'), 
-    style: cx_style
-  });
-
-  // function fetch_nodes(){
-
-  //   // Iterates through cx_data and adds all nodes to cy's 'node' group 
-
-  //   cx_data.forEach(function(elem){
-  //     if(Object.keys(elem)[0] == 'nodes'){
-  //       elem.nodes.forEach(function(node){
-  //         cy.add({
-  //           group: "nodes",
-  //           data: {id: node["@id"], label: node.n},
-  //           style: { backgroundColor: randomColor() }
-  //         })
-  //       })      
-  //     }  
-  //   })
-  // }
-
-  // function fetch_edges(){
-
-  //   // Iterates through cx_data and adds all edges to cy's 'edges' group 
-
-  //   cx_data.forEach(function(elem){
-  //     if(Object.keys(elem)[0] == 'edges'){
-  //       elem.edges.forEach(function(edge){
-
-  //         if(!edgeTypes[edge.i]){
-  //           edgeTypes[edge.i] = "";
-  //         }
-
-  //         cy.add({
-  //           group: "edges",
-  //           data: {
-  //             id: edge["@id"],
-  //             source: edge.s,
-  //             target: edge.t,
-  //             type: edge.i 
-  //           }  
-  //         })   
-  //       })   
-  //     }
-  //   })
-  // }
-
-  function styleGraph(){
-    var someColor;
-
-    for(var type in edgeTypes){
-      someColor = randomColor();
-      edgeTypes[type] = someColor;
-      updateEdgeColor(type, someColor, false);
-    }
-
-    cy.style().update();
   }
 
   function updateEdgeColor(type, color, update){
@@ -95,25 +25,21 @@ cx_style = cx_style[0].style;
   }
 
   function init(){
-    // fetch_nodes();
-    // fetch_edges();
+    cy = cytoscape({
+            container: document.getElementById(elementID), 
+            style: cx_style[0].style
+          });
 
     cy.json( cx_data );
     cy.json( cx_style );
 
     cy.style().update();
-
-    //cy.layout({ 
-      //name: 'cose'
-    //}).run();
-
-    // styleGraph();
   }
 
   init();
 
+  // Interface for CytoscapeObject.
   return {
-    getEdges: getEdges,
     updateEdgeColor: updateEdgeColor
   }
 };
@@ -163,11 +89,11 @@ function formatViewport(){
   var viewport = document.getElementById('cyViewport'),
       windowHeight = window.innerHeight; 
 
-  viewport.style.height = windowHeight - 200 + 'px';
+  viewport.style.height = windowHeight + 'px';
 }  
 
 window.onload = function(){ 
   formatViewport();
-  window.cy = new CytoscapeObject();
+  window.cy = new CytoscapeObject("cyViewport");
   window.cyGUI = new CytoscapeGUI();
 }

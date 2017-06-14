@@ -5,7 +5,7 @@ body {
 #cyViewport {
   width: 100%;
   height: 500px;
-  background-color: #222;
+  background-color: rgb(60, 60, 60);
   display: block;
   margin-left: auto;
   margin-right: auto;

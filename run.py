@@ -6,23 +6,17 @@ import json
 app = Flask(__name__);
 
 @app.route('/')
-@app.route('/<method>/<source_id>')
-@app.route('/<method>/<source_id>/')
-def home(method, source_id):
+def home():
     """
         Gather important data to send to client side with home template
-        'method' argument may by either 'local' or 'network'.
-        If 'method' argument is 'local', 'id' is name of document
-        If 'method' argument is 'network', 'id' is id of public NEDx repository
     """
     network_id = get_network_id()
     view_id = get_view_id(network_id)
 
-    if method == "network":
-        cx_data = json.dumps(get_network_cx(network_id, view_id))
-        cx_style = json.dumps(get_network_style()) # Style
+    cx_data = json.dumps(get_network_cx(network_id, view_id))
+    cx_style = json.dumps(get_network_style()) # Style
 
-    return render_template('home.html', cx_data = cx_data, cx_style = cx_style)
+    return render_template('home.html', cx_data = cx_data, cx_style = cx_style, )
         
 
 def get_local_cx(filename):
@@ -72,19 +66,14 @@ def get_network_cx(network_id, view_id):
     return request.read().decode('utf8')   
 
 
-#########################
-# get_network_style - Will
-# Grabs the style of the network.
-# Style grabbed is the 'default' style. That style
-# is modified by R.
-# Based off of get_network_cx
 def get_network_style():
     """
-        Get CX data from public NDEx server
-        Accepts network id and view id
-        Returns string of network JSON data
-        TODO: Provide interface for different methods, i.e. 'metadata' instead of 'network'
-        """
+        get_network_style - Will
+        Grabs the style of the network.
+        Style grabbed is the 'default' style. That style
+        is modified by R.
+        Based off of get_network_cx
+    """
     endpoint = "http://localhost:1234/v1/styles/default.json/"
     
     request = urllib2.urlopen(endpoint)
