@@ -92,8 +92,21 @@ function formatViewport(){
   viewport.style.height = windowHeight + 'px';
 }  
 
+function displayErrors(){
+  if(error_message.length){
+    var message = $("#partialTemplates .errorMessage").clone()
+    $('body').html('').prepend(message); 
+    return true; 
+  }
+
+  return false;
+}
+
 window.onload = function(){ 
+ 
+  if( displayErrors() ) return;
+
   formatViewport();
   window.cy = new CytoscapeObject("cyViewport");
-  window.cyGUI = new CytoscapeGUI();
+  // window.cyGUI = new CytoscapeGUI();
 }

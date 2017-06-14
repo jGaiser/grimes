@@ -10,13 +10,20 @@ def home():
     """
         Gather important data to send to client side with home template
     """
-    network_id = get_network_id()
-    view_id = get_view_id(network_id)
+    cx_data = {}
+    cx_style = {}
+    error_message = ''
 
-    cx_data = json.dumps(get_network_cx(network_id, view_id))
-    cx_style = json.dumps(get_network_style()) # Style
+    try:
+        network_id = get_network_id()
+        view_id = get_view_id(network_id)
+        cx_data = json.dumps(get_network_cx(network_id, view_id))
+        cx_style = json.dumps(get_network_style()) # Style
+    except Exception as e:
+        print e
+        error_message = "No Cytoscape networks available."
 
-    return render_template('home.html', cx_data = cx_data, cx_style = cx_style, )
+    return render_template('home.html', cx_data = cx_data, cx_style = cx_style, error_message = error_message)
         
 
 def get_local_cx(filename):
