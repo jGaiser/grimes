@@ -19,12 +19,37 @@ def home():
         view_id = get_view_id(network_id)
         cx_data = json.dumps(get_network_cx(network_id, view_id))
         cx_style = json.dumps(get_network_style()) # Style
+        mapping = json.dumps(get_mapping("NODE_SIZE"))
     except Exception as e:
         print e
         error_message = "No Cytoscape networks available."
 
-    return render_template('home.html', cx_data = cx_data, cx_style = cx_style, error_message = error_message)
-        
+    return render_template('home.html', cx_data=cx_data, cx_style=cx_style, error_message=error_message, mapping=mapping)
+
+
+def get_network_cx(network_id, view_id):
+    """
+        Get CX data from public NDEx server
+        Accepts network id and view id
+        Returns string of network JSON data
+        TODO: Provide interface for different methods, i.e. 'metadata' instead of 'network' 
+    """
+    endpoint   = "http://localhost:1234/v1/networks/%s/views/%s" % (network_id, view_id)
+    response = urllib2.urlopen(endpoint)
+
+    return response.read().decode('utf8')   
+  
+
+def get_mapping(visual_property):
+    """
+        Retrieve mapping of provided visual property.
+    """
+    endpoint = "http://localhost:1234/v1/styles/default/mappings/%s" % visual_property
+    response = urllib2.urlopen(endpoint)
+
+    return response.read().decode('utf8')
+
+
 
 def get_local_cx(filename):
     """
@@ -58,21 +83,6 @@ def get_view_id(network_id):
     return json.load(response)[0]
 
 
-def get_network_cx(network_id, view_id):
-    """
-        Get CX data from public NDEx server
-        Accepts network id and view id
-        Returns string of network JSON data
-        TODO: Provide interface for different methods, i.e. 'metadata' instead of 'network' 
-    """
-    endpoint   = "http://localhost:1234/v1/networks/%s/views/%s" % (network_id, view_id)
-    method     = 'network'
-    network_id = network_id
-
-    request = urllib2.urlopen(endpoint)
-    return request.read().decode('utf8')   
-
-
 def get_network_style():
     """
         get_network_style - Will
@@ -83,5 +93,5 @@ def get_network_style():
     """
     endpoint = "http://localhost:1234/v1/styles/default.json/"
     
-    request = urllib2.urlopen(endpoint)
-    return request.read().decode('utf8')
+    response = urllib2.urlopen(endpoint)
+    return response.read().decode('utf8')

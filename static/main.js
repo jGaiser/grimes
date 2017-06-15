@@ -1,7 +1,29 @@
+var cy, edgeCollection, nodeCollection, nodeSizeMapping;
+
 function CytoscapeObject(elementID){
 
-  // Grab the actual 'style' object from JSON
-  var cy;
+  function getNodeSize(node){
+    nodeValue = node[node_mapping.mappingColumn];
+
+    if(nodeValue <= node_mapping.points[0].value){
+      return node_mapping.points[0].value.lesser;
+    }
+
+    if(nodeValue >= node_mapping.points[node_mapping.points.length - 1].value){
+      return node_mapping.points[0].value.greater;
+    }
+
+    for(var i in node_mapping.points){
+      if( nodeValue == node_mapping.points[i].value ){
+        return node_mapping.points[i].equal;
+      }
+
+      if(nodeValue < node_mapping.points[i].value){
+        return ((nodeValue - node_mapping.points[i-1].value) / (node_mapping.points[i].value - node_mapping.points[i-1].value)) *
+               (parseFloat(node_mapping.points[i].equal) - parseFloat(node_mapping.points[i-1].equal)) + parseFloat(node_mapping.points[i-1].equal);
+      }
+    } 
+  }
 
   function randomColor(){
 
@@ -19,28 +41,65 @@ function CytoscapeObject(elementID){
     return returnString;
   }
 
-  function updateEdgeColor(type, color, update){
-    cy.style().selector('edge[type="'+ type +'"]').style({'line-color': color});
+  // If change should be affected immediately, pass boolean true as argument for 'update' parameter
+  // Otherwise, pass boolean false
+  function updateEdge(selector, style, update){
+    cy.style().selector(selector).style({'line-color': color});
     if(update) cy.style().update();
   }
 
+  function updateAllNodeSizes(){
+    var node, widthHeight;
+
+    for (var i in nodeCollection) {
+      node = nodeCollection[i].data
+      widthHeight = getNodeSize(node);
+      console.log(widthHeight);
+
+      cy.style()
+        .selector('node[id="' + node.id + '"]')
+        .style({'width': widthHeight,
+                'height': widthHeight });
+    }
+
+    cy.style().update();
+  }
+
+  function updateAllEdgeWidths(){
+    for (var i in edgeCollection) {
+
+      calculatedWidth = ( edgeCollection[i].data.Weight < 0 ) ? 1 : Math.ceil(edgeCollection[i].data.Weight * 5);
+
+      cy.style()
+        .selector('edge[id="' + edgeCollection[i].data.id + '"]')
+        .style({'width': calculatedWidth });
+    }
+
+     cy.style().update()
+  }
+
   function init(){
+    edgeCollection = cx_data.elements.edges;
+    nodeCollection = cx_data.elements.nodes;
+
     cy = cytoscape({
             container: document.getElementById(elementID), 
             style: cx_style[0].style
           });
 
+    updateAllEdgeWidths();
+    updateAllNodeSizes();
     cy.json( cx_data );
-    cy.json( cx_style );
 
     cy.style().update();
+    cy.center();
   }
 
   init();
 
   // Interface for CytoscapeObject.
   return {
-    updateEdgeColor: updateEdgeColor
+    updateEdge: updateEdge
   }
 };
 
@@ -92,7 +151,7 @@ function formatViewport(){
   viewport.style.height = windowHeight + 'px';
 }  
 
-function displayErrors(){
+function displayErrors(){ 
   if(error_message.length){
     var message = $("#partialTemplates .errorMessage").clone()
     $('body').html('').prepend(message); 
@@ -107,6 +166,6 @@ window.onload = function(){
   if( displayErrors() ) return;
 
   formatViewport();
-  window.cy = new CytoscapeObject("cyViewport");
+  window.cyt = new CytoscapeObject("cyViewport");
   // window.cyGUI = new CytoscapeGUI();
 }
